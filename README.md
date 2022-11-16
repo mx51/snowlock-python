@@ -8,16 +8,19 @@
 Lock management library for Snowflake.
 
 ## Requirements
----
+
 Requires Python 3.6 or above.
+
 ## Usage
----
+
 You can install snowlock from [PyPI](https://pypi.org/project/snowlock/):
+
 ```bash
 pip install snowlock
 ```
 
 To acquire a lock using a Snowflake table. The lock table will be created if it does not exist and will default to using a table called `LOCK`.
+
 ```py
 import os
 import snowflake.connector as sc
@@ -40,5 +43,5 @@ with lock(client="test", resource="test", conn=connection, table="LOCK") as sess
 ```
 
 ## Code of Conduct
----
+
 All contributors are expected to follow the [PyPA Code of Conduct](https://www.pypa.io/en/latest/code-of-conduct/).

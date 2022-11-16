@@ -41,11 +41,11 @@ def lock(
                         '{client}' as client,
                         '{resource}' as resource,
                         '{session_id}' as session_id,
-                        True as acquired,
+                        true as acquired,
                         current_timestamp() as acquired_ts
                     )
                     select * from l
-                    where not exists (select * from {table} where l.resource = {table}.resource and {table}.acquired = True and l.client != {table}.client)
+                    where not exists (select * from {table} where l.resource = {table}.resource and {table}.acquired = true and l.client != {table}.client)
                 """,
             )
 
@@ -55,7 +55,7 @@ def lock(
                     select 
                         client
                     from {table} 
-                    where acquired=True
+                    where acquired=true
                     qualify row_number() over (partition by resource order by acquired_ts, session_id) = 1
                 """,
             )
@@ -100,7 +100,7 @@ def lock(
                         primary key(client,resource)
                     )
                     data_retention_time_in_days=0
-                    change_tracking=False
+                    change_tracking=false
                 """,
             )
             logger.info("Created lock table %s and retrying", table)
@@ -113,7 +113,7 @@ def lock(
                     conn=conn,
                     sql=f"""
                     update {table}
-                    set acquired=False
+                    set acquired=false
                     where session_id='{session_id}'
                     """,
                 )

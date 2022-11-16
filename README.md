@@ -34,7 +34,7 @@ connection = sc.connect(
     **kwargs,
 )
 
-with lock(client="test", resource="test", conn=connection, lock_table="LOCK") as session:
+with lock(client="test", resource="test", conn=connection, table="LOCK") as session:
     ## Do something using the locked resource
 
 ```

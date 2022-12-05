@@ -27,7 +27,7 @@ def lock(
         Iterator[UUID]: The session id of the lock.
     """
     session_id = uuid4()
-    success = False
+    lock_acquired = False
     retry_attempt = 0
 
     while retry_attempt < MAX_RETRIES:
@@ -79,6 +79,7 @@ def lock(
                         """,
                     )
                     return
+            lock_acquired = True
             yield session_id
         except ProgrammingError as e:
             table_not_exists = (
@@ -104,10 +105,8 @@ def lock(
                 """,
             )
             logger.info("Created lock table %s and retrying", table)
-        else:
-            success = True
         finally:
-            if success:
+            if lock_acquired:
                 logger.info("Releasing locks for %s", session_id)
                 execute_query(
                     conn=conn,

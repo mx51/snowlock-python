@@ -107,13 +107,14 @@ def lock(
             logger.info("Created lock table %s and retrying", table)
         finally:
             if lock_acquired:
-                logger.info("Releasing locks for %s", session_id)
+                logger.info("Releasing locks on %s for %s", resource, client)
                 execute_query(
                     conn=conn,
                     sql=f"""
                     update {table}
                     set acquired=false
-                    where session_id='{session_id}'
+                    where client='{client}'
+                    and resource='{resource}'
                     """,
                 )
                 retry_attempt = MAX_RETRIES
